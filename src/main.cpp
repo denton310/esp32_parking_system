@@ -16,12 +16,6 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 const uint16_t trigPin = 25;
 const uint16_t echoPin = 26;
 
-int get_distance();
-void emptyLayer();
-
-const unsigned int distances[] = {40, 30, 20, 10};
-const int positions[][2] = {{1, 8}, {7, 15}, {12, 25}, {19, 32}};
-
 void setup()
 {
   Serial.begin(115200);
@@ -61,140 +55,105 @@ void setup()
     // display.drawBitmap(26, 47, bitmap_car, 73, 17, 1);
     display.drawBitmap(0, 0, bitmap_empty, 128, 64, 1);
     */
-  }
+}
 
-  // steps are sensors steps how near object is
-  uint8_t step1 = 40;
-  uint8_t step2 = 30;
-  uint8_t step3 = 20;
-  uint8_t step4 = 10;
-  /*
-  const int positions[][4] = {{1, 8, 29, 23}, {7, 15}, {12, 25}};
-  const uint8_t bitmapData[66] = {}
-  void drawBitmap(int x, int y, const uint8_t *bitmap, int w, int h)
+/*
+const int positions[][4] = {{1, 8, 29, 23}, {7, 15}, {12, 25}};
+const uint8_t bitmapData[66] = {}
+void drawBitmap(int x, int y, const uint8_t *bitmap, int w, int h)
+{
+  display.drawBitmap(x, y, bitmap, w, h, 1);
+}
+const struct {
+  int x;
+  int y;
+  int w;
+  int h;
+  const uint8_t* bitmapData;
+}
+bitmaps[] = {
+  {1, 8, 29, 23, bitmap_sensor_1a_off},
+  {7, 15, 27, 22, bitmap_sensor_1b_off},
+  {12, 25, 24, 19, bitmap_sensor_1c_off},
+  {19, 32, 20, 17, bitmap_sensor_1d_off},
+  {30, 1, 32, 13, bitmap_sensor_2a_off},
+  {34, 11, 28, 12, bitmap_sensor_2b_off},
+  {37, 20, 25, 11, bitmap_sensor_2c_off},
+  {40, 28, 22, 11, bitmap_sensor_2d_off},
+  {65, 1, 32, 13, bitmap_sensor_3a_off},
+  {65, 11, 29, 12, bitmap_sensor_3b_off},
+  {65, 20, 25, 11, bitmap_sensor_3c_off},
+  {65, 28, 21, 11, bitmap_sensor_3d_off},
+  {97, 9, 28, 23, bitmap_sensor_4a_off},
+  {93, 17, 27, 21, bitmap_sensor_4b_off},
+  {90, 25, 25, 19, bitmap_sensor_4c_off},
+  {86, 33, 21, 16, bitmap_sensor_4d_off}
+};
+*/
+// steps are sensors steps how near object is
+uint8_t step1 = 50;
+uint8_t step2 = 30;
+uint8_t step3 = 20;
+uint8_t step4 = 10;
+
+void get_distance(int* val0, int* val1, int* val2, int* val3);
+void emptyLayer();
+
+void loop()
+{
+  int dist1, dist2, dist3, dist4 = 0;
+  display.clearDisplay();
+  emptyLayer();
+
+  //get distances from all sensors
+  get_distance(&dist1, &dist2, &dist3, &dist4);
+  //printf("dist1= %d\n", dist1);
+  //printf("dist2= %d\n", dist2);
+
+  if (dist1 <= step1)
   {
-    display.drawBitmap(x, y, bitmap, w, h, 1);
+    display.drawBitmap(1, 8, bitmap_sensor_1a_on, 29, 23, 1);
   }
-  const struct {
-    int x;
-    int y;
-    int w;
-    int h;
-    const uint8_t* bitmapData;
-  }
-  bitmaps[] = {
-    {1, 8, 29, 23, bitmap_sensor_1a_off},
-    {7, 15, 27, 22, bitmap_sensor_1b_off},
-    {12, 25, 24, 19, bitmap_sensor_1c_off},
-    {19, 32, 20, 17, bitmap_sensor_1d_off},
-    {30, 1, 32, 13, bitmap_sensor_2a_off},
-    {34, 11, 28, 12, bitmap_sensor_2b_off},
-    {37, 20, 25, 11, bitmap_sensor_2c_off},
-    {40, 28, 22, 11, bitmap_sensor_2d_off},
-    {65, 1, 32, 13, bitmap_sensor_3a_off},
-    {65, 11, 29, 12, bitmap_sensor_3b_off},
-    {65, 20, 25, 11, bitmap_sensor_3c_off},
-    {65, 28, 21, 11, bitmap_sensor_3d_off},
-    {97, 9, 28, 23, bitmap_sensor_4a_off},
-    {93, 17, 27, 21, bitmap_sensor_4b_off},
-    {90, 25, 25, 19, bitmap_sensor_4c_off},
-    {86, 33, 21, 16, bitmap_sensor_4d_off}
-  };
-  */
-  void loop()
+
+  if (dist1 <= step2)
   {
-    // display.clearDisplay();
-    // drawBitmap(positions[i][0], positions[i][1], bitmapData, positions[i][2], positions[i][3]);
-
-    // display.display();
-    do
-    {
-      int dist1 = get_distance();
-      display.clearDisplay();
-      emptyLayer();
-      // display.drawBitmap(1, 8, dist1 > step1 ? bitmap_sensor_1a_off, dist1 = 40 : bitmap_sensor_1a_on, 29, 23, 1);
-
-      // jos anturi on 40 tai alle tarkistetaan sensoria
-      // tässä pyöritään niin kauan kunnes toisin todistetaan
-      // jos anturi on 20-30, tulostetaan toinen kuva näkyviin
-      // jos anturi on yl
-      if (dist1 <= 40)
-      {
-        display.drawBitmap(1, 8, bitmap_sensor_1a_on, 29, 23, 1);
-      }
-
-      if (dist1 <= 30)
-      {
-        display.drawBitmap(7, 15, bitmap_sensor_1b_on, 27, 22, 1);
-      }
-      if (dist1 <= 20)
-      {
-        display.drawBitmap(12, 25, bitmap_sensor_1c_on, 24, 19, 1);
-      }
-
-      if (dist1 <= 10)
-      {
-        display.drawBitmap(19, 32, bitmap_sensor_1d_on, 20, 17, 1);
-      }
-
-      /*
-      if (dist1 <= 30)
-      {
-        display.drawBitmap(7, 15, bitmap_sensor_1b_on, 27, 22, 1);
-        display.display();
-      }
-      else
-      {
-        display.drawBitmap(7, 15, bitmap_sensor_1b_off, 27, 22, 1);
-      }
-
-      if (dist1 <= 20)
-      {
-        display.drawBitmap(12, 25, bitmap_sensor_1c_on, 24, 19, 1);
-        display.display();
-      }
-      else
-      {
-        display.drawBitmap(12, 25, bitmap_sensor_1c_off, 24, 19, 1);
-      }
-      if (dist1 < 10)
-      {
-        display.drawBitmap(19, 32, bitmap_sensor_1d_on, 20, 17, 1);
-        display.display();
-      }
-      else
-      {
-        display.drawBitmap(19, 32, bitmap_sensor_1d_off, 20, 17, 1);
-      }
-      Serial.printf("Distance: %d cm\n", dist1);
-      // display.printf("Distance: %d cm" ,x);
-      */
-      display.display();
-      vTaskDelay(300 / portTICK_PERIOD_MS);
-
-    } while (40 != 40);
+    display.drawBitmap(7, 15, bitmap_sensor_1b_on, 27, 22, 1);
   }
-  void emptyLayer()
+  if (dist1 <= step3)
   {
-    display.drawBitmap(26, 47, bitmap_car, 73, 17, 1);
-
-    display.drawBitmap(1, 8, bitmap_sensor_1a_off, 29, 23, 1);
-    display.drawBitmap(7, 15, bitmap_sensor_1b_off, 27, 22, 1);
-    display.drawBitmap(12, 25, bitmap_sensor_1c_off, 24, 19, 1);
-    display.drawBitmap(19, 32, bitmap_sensor_1d_off, 20, 17, 1);
-
-    display.drawBitmap(30, 1, bitmap_sensor_2a_off, 32, 13, 1);
-    display.drawBitmap(34, 11, bitmap_sensor_2b_off, 28, 12, 1);
-    display.drawBitmap(37, 20, bitmap_sensor_2c_off, 25, 11, 1);
-    display.drawBitmap(40, 28, bitmap_sensor_2d_off, 22, 11, 1);
-
-    display.drawBitmap(65, 1, bitmap_sensor_3a_off, 32, 13, 1);
-    display.drawBitmap(65, 11, bitmap_sensor_3b_off, 29, 12, 1);
-    display.drawBitmap(65, 20, bitmap_sensor_3c_off, 25, 11, 1);
-    display.drawBitmap(65, 28, bitmap_sensor_3d_off, 21, 11, 1);
-
-    display.drawBitmap(97, 9, bitmap_sensor_4a_off, 28, 23, 1);
-    display.drawBitmap(93, 17, bitmap_sensor_4b_off, 27, 21, 1);
-    display.drawBitmap(90, 25, bitmap_sensor_4c_off, 25, 19, 1);
-    display.drawBitmap(86, 33, bitmap_sensor_4d_off, 21, 16, 1);
+    display.drawBitmap(12, 25, bitmap_sensor_1c_on, 24, 19, 1);
   }
+
+  if (dist1 <= step4)
+  {
+    display.drawBitmap(19, 32, bitmap_sensor_1d_on, 20, 17, 1);
+  }
+
+  display.display();
+  vTaskDelay(200 / portTICK_PERIOD_MS);
+}
+
+void emptyLayer()
+{
+  display.drawBitmap(26, 47, bitmap_car, 73, 17, 1);
+
+  display.drawBitmap(1, 8, bitmap_sensor_1a_off, 29, 23, 1);
+  display.drawBitmap(7, 15, bitmap_sensor_1b_off, 27, 22, 1);
+  display.drawBitmap(12, 25, bitmap_sensor_1c_off, 24, 19, 1);
+  display.drawBitmap(19, 32, bitmap_sensor_1d_off, 20, 17, 1);
+
+  display.drawBitmap(30, 1, bitmap_sensor_2a_off, 32, 13, 1);
+  display.drawBitmap(34, 11, bitmap_sensor_2b_off, 28, 12, 1);
+  display.drawBitmap(37, 20, bitmap_sensor_2c_off, 25, 11, 1);
+  display.drawBitmap(40, 28, bitmap_sensor_2d_off, 22, 11, 1);
+
+  display.drawBitmap(65, 1, bitmap_sensor_3a_off, 32, 13, 1);
+  display.drawBitmap(65, 11, bitmap_sensor_3b_off, 29, 12, 1);
+  display.drawBitmap(65, 20, bitmap_sensor_3c_off, 25, 11, 1);
+  display.drawBitmap(65, 28, bitmap_sensor_3d_off, 21, 11, 1);
+
+  display.drawBitmap(97, 9, bitmap_sensor_4a_off, 28, 23, 1);
+  display.drawBitmap(93, 17, bitmap_sensor_4b_off, 27, 21, 1);
+  display.drawBitmap(90, 25, bitmap_sensor_4c_off, 25, 19, 1);
+  display.drawBitmap(86, 33, bitmap_sensor_4d_off, 21, 16, 1);
+}
