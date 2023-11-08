@@ -11,25 +11,46 @@
 #define OLED_ADDR 0x3c
 #define NUMBER_OF_SENSORS 4
 
+#define echoPin 26
+#define trigPin1 14
+#define trigPin2 12
+#define trigPin3 13
+#define trigPin4 15
+
+
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-const uint16_t trigPin = 25;
-const uint16_t echoPin = 26;
+int get_distance(int, int);
 
 void setup()
 {
   Serial.begin(115200);
   // Start I2C Communication SDA = 5 and SCL = 4 on Wemos Lolin32 ESP32 with built-in SSD1306 OLED
   Wire.begin(5, 4);
-
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-
+  
+    pinMode(echoPin, INPUT);
+    pinMode(trigPin1, OUTPUT);
+    pinMode(trigPin2, OUTPUT);
+    pinMode(trigPin3, OUTPUT);
+    pinMode(trigPin4, OUTPUT);
+  
+  // random stuff
+  /*
+  for (size_t i = 0; i > sizeof(trigPin); i++)
+  {
+    pinMode(i, OUTPUT);
+    Serial.printf("for looppi: %d",i,"\n");
+  }
+  for (size_t o = 0; o > sizeof(echoPin); o++)
+  {
+    pinMode(o, INPUT);
+  }
+*/
   if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR, false, false))
   {
     Serial.println(F("SSD1306 allocation failed"));
     for (;;)
-      ;
+    ;
   }
   // oled poweing up
   display.display();
@@ -44,17 +65,12 @@ void setup()
   display.display();
 
   // set up
-  for (uint8_t i = 0; i < 4; i++)
+  for (uint8_t i = 0; i < 2; i++)
   {
     vTaskDelay(600 / portTICK_PERIOD_MS);
     display.print(".");
     display.display();
   }
-  /*
-    display.clearDisplay();
-    // display.drawBitmap(26, 47, bitmap_car, 73, 17, 1);
-    display.drawBitmap(0, 0, bitmap_empty, 128, 64, 1);
-    */
 }
 
 /*
@@ -96,19 +112,24 @@ uint8_t step2 = 30;
 uint8_t step3 = 20;
 uint8_t step4 = 10;
 
-void get_distance(int* val0, int* val1, int* val2, int* val3);
+// void get_distance(int* val0, int* val1, int* val2, int* val3);
 void emptyLayer();
 
 void loop()
 {
-  int dist1, dist2, dist3, dist4 = 0;
   display.clearDisplay();
   emptyLayer();
 
-  //get distances from all sensors
-  get_distance(&dist1, &dist2, &dist3, &dist4);
-  //printf("dist1= %d\n", dist1);
-  //printf("dist2= %d\n", dist2);
+  // get distances from all sensors
+  int dist1 = get_distance(trigPin1, echoPin);
+  int dist2 = get_distance(trigPin2, echoPin);
+  int dist3 = get_distance(trigPin3, echoPin);
+  int dist4 = get_distance(trigPin4, echoPin);
+
+  Serial.printf("Etaisyys anturi 1: %d cm\n", dist1);
+  Serial.printf("Etaisyys anturi 2: %d cm\n", dist2);
+  Serial.printf("Etaisyys anturi 3: %d cm\n", dist3);
+  Serial.printf("Etaisyys anturi 4: %d cm\n", dist4);
 
   if (dist1 <= step1)
   {
