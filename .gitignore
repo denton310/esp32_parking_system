@@ -4,3 +4,4 @@
 .vscode/launch.json
 .vscode/ipch
 /src/esp32_parking_system.code-workspace
+/src/screen.cpp
