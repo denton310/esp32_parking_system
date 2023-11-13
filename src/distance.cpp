@@ -15,7 +15,8 @@ int get_distance(int trigPin, int echoPin)
   digitalWrite(trigPin, LOW);
 
   long duration = pulseIn(echoPin, HIGH, BUFF_SIZE);
-  //Serial.printf("duration us: %d\n", duration);
+
+  // Serial.printf("duration us: %d\n", duration);
 
   int distance = duration / 58;
   // keep range under 100cm. increase if want more distance

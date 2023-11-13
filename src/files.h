@@ -377,3 +377,31 @@ const unsigned char bitmap_sensor_4d_off [] PROGMEM = {
 	0x18, 0x00, 0x80, 0x0c, 0x00, 0x70, 0x02, 0x00, 0x18, 0x01, 0x80, 0x06, 0x00, 0x40, 0x01, 0x00, 
 	0x30, 0x00, 0x80, 0x08, 0x00, 0x60, 0x08, 0x00, 0x18, 0x10, 0x00, 0x06, 0x20, 0x00, 0x01, 0xc0
 };
+
+struct Bitmap
+{
+  int x;
+  int y;
+  int width;
+  int height;
+  const uint8_t *bitmap_on;
+};
+// bitmaps x, y, width, height and bitmap data
+Bitmap bitmaps[] = {
+    {1, 8, 29, 23, bitmap_sensor_1a_on},
+    {30, 1, 32, 13, bitmap_sensor_2a_on},
+    {65, 1, 32, 13, bitmap_sensor_3a_on},
+    {97, 9, 28, 23, bitmap_sensor_4a_on},
+    {7, 15, 27, 22, bitmap_sensor_1b_on},
+    {34, 11, 28, 12, bitmap_sensor_2b_on},
+    {65, 11, 29, 12, bitmap_sensor_3b_on},
+    {93, 17, 27, 21, bitmap_sensor_4b_on},
+    {12, 25, 24, 19, bitmap_sensor_1c_on},
+    {37, 20, 25, 11, bitmap_sensor_2c_on},
+    {65, 20, 25, 11, bitmap_sensor_3c_on},
+    {90, 25, 25, 19, bitmap_sensor_4c_on},
+    {19, 32, 20, 17, bitmap_sensor_1d_on},
+    {40, 28, 22, 11, bitmap_sensor_2d_on},
+    {65, 28, 21, 11, bitmap_sensor_3d_on},
+    {86, 33, 21, 16, bitmap_sensor_4d_on},
+};

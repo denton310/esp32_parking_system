@@ -16,7 +16,10 @@
 #define OLED_ADDR 0x3c
 #define NUMBER_OF_SENSORS 4
 
-#define echoPin 26
+#define echoPin1 26
+#define echoPin2 16
+#define echoPin3 0
+#define echoPin4 2
 #define trigPin1 14
 #define trigPin2 12
 #define trigPin3 13
@@ -26,34 +29,6 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 int get_distance(int, int);
 void emptyLayer();
-
-struct Bitmap
-{
-  int x;
-  int y;
-  int width;
-  int height;
-  const uint8_t *bitmap_on;
-};
-// bitmaps x, y, width, height and bitmap data
-Bitmap bitmaps[] = {
-    {1, 8, 29, 23, bitmap_sensor_1a_on},
-    {30, 1, 32, 13, bitmap_sensor_2a_on},
-    {65, 1, 32, 13, bitmap_sensor_3a_on},
-    {97, 9, 28, 23, bitmap_sensor_4a_on},
-    {7, 15, 27, 22, bitmap_sensor_1b_on},
-    {34, 11, 28, 12, bitmap_sensor_2b_on},
-    {65, 11, 29, 12, bitmap_sensor_3b_on},
-    {93, 17, 27, 21, bitmap_sensor_4b_on},
-    {12, 25, 24, 19, bitmap_sensor_1c_on},
-    {37, 20, 25, 11, bitmap_sensor_2c_on},
-    {65, 20, 25, 11, bitmap_sensor_3c_on},
-    {90, 25, 25, 19, bitmap_sensor_4c_on},
-    {19, 32, 20, 17, bitmap_sensor_1d_on},
-    {40, 28, 22, 11, bitmap_sensor_2d_on},
-    {65, 28, 21, 11, bitmap_sensor_3d_on},
-    {86, 33, 21, 16, bitmap_sensor_4d_on},
-};
 
 // steps are sensors steps how near object is
 uint8_t step1 = 50;
@@ -67,7 +42,10 @@ void setup()
   // Start I2C Communication SDA = 5 and SCL = 4 on Wemos Lolin32 ESP32 with built-in SSD1306 OLED
   Wire.begin(5, 4);
 
-  pinMode(echoPin, INPUT);
+  pinMode(echoPin1, INPUT);
+  pinMode(echoPin2, INPUT);
+  pinMode(echoPin3, INPUT);
+  pinMode(echoPin4, INPUT);
   pinMode(trigPin1, OUTPUT);
   pinMode(trigPin2, OUTPUT);
   pinMode(trigPin3, OUTPUT);
@@ -106,10 +84,10 @@ void loop()
   emptyLayer();
 
   // get distances from all sensors
-  int dist1 = get_distance(trigPin1, echoPin);
-  int dist2 = get_distance(trigPin2, echoPin);
-  int dist3 = get_distance(trigPin3, echoPin);
-  int dist4 = get_distance(trigPin4, echoPin);
+  int dist1 = get_distance(trigPin1, echoPin1);
+  int dist2 = get_distance(trigPin2, echoPin2);
+  int dist3 = get_distance(trigPin3, echoPin3);
+  int dist4 = get_distance(trigPin4, echoPin4);
 
   int distances[] = {dist1, dist2, dist3, dist4};
 
