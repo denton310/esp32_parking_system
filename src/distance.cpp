@@ -1,29 +1,54 @@
 #include "Wire.h"
 #include <Arduino.h>
 
-#define BUFF_SIZE 30000
-#define MAX_DIST 100
+#define BUFF_SIZE 10000
+#define MAX_DIST 120
 #define MIN_DIST 2
 
 int get_distance(int trigPin, int echoPin)
 {
-  digitalWrite(echoPin, LOW);
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+  // variable declaration
+  double distance = 0.0;
+  double temp = 0.0;
+  const double default_meas = 4.0;
 
-  long duration = pulseIn(echoPin, HIGH, BUFF_SIZE);
+  double i = 0.0;
+  double meas = default_meas;
 
-  // Serial.printf("duration us: %d\n", duration);
-
-  int distance = duration / 58;
-  // keep range under 100cm. increase if want more distance
-  if (distance > MIN_DIST && distance < MAX_DIST)
+  // get distance from sensor
+  for (int i = 0; i < default_meas; i++)
   {
-    return distance;
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    long duration = pulseIn(echoPin, HIGH, BUFF_SIZE);
+
+    temp = duration / 58;
+
+    // Serial.printf("meas: %s\n", String(meas));
+
+    // Keep range between MAX and MIN
+    if (temp > MAX_DIST || temp < MIN_DIST)
+    {
+      // Ignore data if meas is some random numbers
+      meas = meas - 1.0;
+    }
+    else
+      // Add temp to distance ^2
+      distance = distance + temp;
+    // Serial.printf("distance value:\t %s meas: %s\n", String(distance), String(meas));
   }
-  else
-    return distance = 100;
+  // if meas under 1, return default values to avoid disinformation
+  if (meas < 1)
+  {
+    Serial.println("distance measure failed!");
+    return MAX_DIST + 1.0;
+  }
+  // calc avg to return
+  double avg_distance = distance / meas;
+  // Serial.printf("avg distance: %s cm\n", String(average_distance));
+  return avg_distance;
 }

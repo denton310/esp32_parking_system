@@ -16,14 +16,14 @@
 #define OLED_ADDR 0x3c
 #define NUMBER_OF_SENSORS 4
 
-#define echoPin1 26
-#define echoPin2 16
-#define echoPin3 0
-#define echoPin4 2
-#define trigPin1 14
+#define echoPin1 15
+#define echoPin2 26
+#define echoPin3 14
+#define echoPin4 16
+#define trigPin1 13
 #define trigPin2 12
-#define trigPin3 13
-#define trigPin4 15
+#define trigPin3 2
+#define trigPin4 0
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
@@ -31,10 +31,10 @@ int get_distance(int, int);
 void emptyLayer();
 
 // steps are sensors steps how near object is
-uint8_t step1 = 50;
-uint8_t step2 = 32;
-uint8_t step3 = 20;
-uint8_t step4 = 10;
+const uint8_t step1 = 80;
+const uint8_t step2 = 50;
+const uint8_t step3 = 30;
+const uint8_t step4 = 10;
 
 void setup()
 {
@@ -57,6 +57,7 @@ void setup()
     for (;;)
       ;
   }
+
   // oled poweing up
   display.display();
   delay(2000);
@@ -84,15 +85,24 @@ void loop()
   emptyLayer();
 
   // get distances from all sensors
-  int dist1 = get_distance(trigPin1, echoPin1);
-  int dist2 = get_distance(trigPin2, echoPin2);
-  int dist3 = get_distance(trigPin3, echoPin3);
-  int dist4 = get_distance(trigPin4, echoPin4);
+  double dist1 = get_distance(trigPin1, echoPin1);
+  delayMicroseconds(2);
+  double dist2 = get_distance(trigPin2, echoPin2);
+  delayMicroseconds(2);
+  double dist3 = get_distance(trigPin3, echoPin3);
+  delayMicroseconds(2);
+  double dist4 = get_distance(trigPin4, echoPin4);
 
-  int distances[] = {dist1, dist2, dist3, dist4};
+
+  Serial.printf("Etaisyys 1: %d\n", dist1);
+  Serial.printf("Etaisyys 2: %d\n", dist2);
+  Serial.printf("Etaisyys 3: %d\n", dist3);
+  Serial.printf("Etaisyys 4: %d\n", dist4);
+
+  double distances[] = {dist1, dist2, dist3, dist4};
 
   // check each sensor values and compare it to steps. Bitmap[i+n] is offset because drawBitmap compares it via distances[] values
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < NUMBER_OF_SENSORS; i++)
   {
     if (distances[i] <= step1)
     {
@@ -112,7 +122,7 @@ void loop()
     }
   }
   display.display();
-  vTaskDelay(200 / portTICK_PERIOD_MS);
+  vTaskDelay(50 / portTICK_PERIOD_MS);
 }
 
 void emptyLayer()
