@@ -16,14 +16,14 @@
 #define OLED_ADDR 0x3c
 #define NUMBER_OF_SENSORS 4
 
-#define echoPin1 15
-#define echoPin2 26
-#define echoPin3 14
-#define echoPin4 16
-#define trigPin1 13
-#define trigPin2 12
-#define trigPin3 2
-#define trigPin4 0
+#define echoPin1 16
+#define echoPin2 14
+#define echoPin3 26
+#define echoPin4 15
+#define trigPin1 0
+#define trigPin2 2
+#define trigPin3 12
+#define trigPin4 13
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
@@ -63,7 +63,7 @@ void setup()
   delay(2000);
 
   // clear the buffer
-  display.clearDisplay();
+  /*display.clearDisplay();
   display.setTextColor(WHITE);
   display.setTextSize(2);
   display.setCursor(1, 1);
@@ -76,7 +76,7 @@ void setup()
     vTaskDelay(600 / portTICK_PERIOD_MS);
     display.print(".");
     display.display();
-  }
+  }*/
 }
 
 void loop()
@@ -127,25 +127,25 @@ void loop()
 
 void emptyLayer()
 {
-  display.drawBitmap(26, 47, bitmap_car, 73, 17, 1);
+  display.drawBitmap(26, 0, bitmap_car, 73, 17, 1);
 
-  display.drawBitmap(1, 8, bitmap_sensor_1a_off, 29, 23, 1);
-  display.drawBitmap(7, 15, bitmap_sensor_1b_off, 27, 22, 1);
-  display.drawBitmap(12, 25, bitmap_sensor_1c_off, 24, 19, 1);
-  display.drawBitmap(19, 32, bitmap_sensor_1d_off, 20, 17, 1);
+  display.drawBitmap(2, 34, bitmap_sensor_1a_off, 29, 23, 1);
+  display.drawBitmap(8, 28, bitmap_sensor_1b_off, 27, 22, 1);
+  display.drawBitmap(13, 21, bitmap_sensor_1c_off, 24, 19, 1);
+  display.drawBitmap(20, 16, bitmap_sensor_1d_off, 20, 17, 1);
 
-  display.drawBitmap(30, 1, bitmap_sensor_2a_off, 32, 13, 1);
-  display.drawBitmap(34, 11, bitmap_sensor_2b_off, 28, 12, 1);
-  display.drawBitmap(37, 20, bitmap_sensor_2c_off, 25, 11, 1);
-  display.drawBitmap(40, 28, bitmap_sensor_2d_off, 22, 11, 1);
+  display.drawBitmap(31, 51, bitmap_sensor_2a_off, 32, 13, 1);
+  display.drawBitmap(35, 42, bitmap_sensor_2b_off, 28, 12, 1);
+  display.drawBitmap(38, 34, bitmap_sensor_2c_off, 25, 11, 1);
+  display.drawBitmap(41, 26, bitmap_sensor_2d_off, 22, 11, 1);
 
-  display.drawBitmap(65, 1, bitmap_sensor_3a_off, 32, 13, 1);
-  display.drawBitmap(65, 11, bitmap_sensor_3b_off, 29, 12, 1);
-  display.drawBitmap(65, 20, bitmap_sensor_3c_off, 25, 11, 1);
-  display.drawBitmap(65, 28, bitmap_sensor_3d_off, 21, 11, 1);
+  display.drawBitmap(65, 51, bitmap_sensor_3a_off, 32, 13, 1);
+  display.drawBitmap(65, 42, bitmap_sensor_3b_off, 29, 12, 1);
+  display.drawBitmap(65, 34, bitmap_sensor_3c_off, 25, 11, 1);
+  display.drawBitmap(65, 26, bitmap_sensor_3d_off, 21, 11, 1);
 
-  display.drawBitmap(97, 9, bitmap_sensor_4a_off, 28, 23, 1);
-  display.drawBitmap(93, 17, bitmap_sensor_4b_off, 27, 21, 1);
-  display.drawBitmap(90, 25, bitmap_sensor_4c_off, 25, 19, 1);
-  display.drawBitmap(86, 33, bitmap_sensor_4d_off, 21, 16, 1);
+  display.drawBitmap(98, 33, bitmap_sensor_4a_off, 28, 23, 1);
+  display.drawBitmap(94, 27, bitmap_sensor_4b_off, 27, 21, 1);
+  display.drawBitmap(91, 21, bitmap_sensor_4c_off, 25, 19, 1);
+  display.drawBitmap(87, 16, bitmap_sensor_4d_off, 21, 16, 1);
 }
