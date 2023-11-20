@@ -1,5 +1,5 @@
 // Espressif ESP32-WROOM-32 with built-in 0.96" OLED
-// 4 pieces Ultrasonic HC-SR04 Sensors
+// 4 ultrasonic HC-SR04 Sensors
 // Parking system
 // Akseli Marjanen 2023
 
@@ -57,26 +57,8 @@ void setup()
     for (;;)
       ;
   }
-
-  // oled poweing up
   display.display();
   delay(2000);
-
-  // clear the buffer
-  /*display.clearDisplay();
-  display.setTextColor(WHITE);
-  display.setTextSize(2);
-  display.setCursor(1, 1);
-  display.print("Set up");
-  display.display();
-
-  // set up
-  for (uint8_t i = 0; i < 2; i++)
-  {
-    vTaskDelay(600 / portTICK_PERIOD_MS);
-    display.print(".");
-    display.display();
-  }*/
 }
 
 void loop()
@@ -93,15 +75,16 @@ void loop()
   delayMicroseconds(2);
   double dist4 = get_distance(trigPin4, echoPin4);
 
-
-  Serial.printf("Etaisyys 1: %d\n", dist1);
-  Serial.printf("Etaisyys 2: %d\n", dist2);
-  Serial.printf("Etaisyys 3: %d\n", dist3);
-  Serial.printf("Etaisyys 4: %d\n", dist4);
-
+/*
+  Serial.printf("Etaisyys 1: %s\n", String(dist1));
+  Serial.printf("Etaisyys 2: %s\n", String(dist2));
+  Serial.printf("Etaisyys 3: %s\n", String(dist3));
+  Serial.printf("Etaisyys 4: %s\n", String(dist4));
+*/
   double distances[] = {dist1, dist2, dist3, dist4};
 
   // check each sensor values and compare it to steps. Bitmap[i+n] is offset because drawBitmap compares it via distances[] values
+  
   for (int i = 0; i < NUMBER_OF_SENSORS; i++)
   {
     if (distances[i] <= step1)
@@ -121,6 +104,7 @@ void loop()
       display.drawBitmap(bitmaps[i + 12].x, bitmaps[i + 12].y, bitmaps[i + 12].bitmap_on, bitmaps[i + 12].width, bitmaps[i + 12].height, 1);
     }
   }
+  
   display.display();
   vTaskDelay(50 / portTICK_PERIOD_MS);
 }

@@ -37,7 +37,7 @@ int get_distance(int trigPin, int echoPin)
       meas = meas - 1.0;
     }
     else
-      // Add temp to distance ^2
+      // Add temp to distance total count
       distance = distance + temp;
     // Serial.printf("distance value:\t %s meas: %s\n", String(distance), String(meas));
   }
